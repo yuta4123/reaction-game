@@ -1,1 +1,19 @@
-/* You can add global styles to this file, and also import other style files */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  color: white;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* デスクトップ向け最適化 */
+@media (min-width: 769px) {
+  body {
+    height: 100vh;
+    overflow: hidden;
+  }
+}
