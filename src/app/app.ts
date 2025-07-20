@@ -130,7 +130,7 @@ export class AppComponent implements AfterViewInit {
     if (time < 300) return 'おそっ';
     if (time < 400) return '帰れ';
     if (time < 500) return '寝てた？';
-    return 'もう少し頑張ろう';
+    return '死んでた？';
   }
 
   formatDate(dateString: string): string {
