@@ -5,7 +5,8 @@ enum GameStates {
   IDLE = 'idle',
   WAITING = 'waiting',
   READY = 'ready',
-  FINISHED = 'finished'
+  FINISHED = 'finished',
+  FLYING = 'flying'
 }
 
 interface GameRecord {
@@ -28,6 +29,7 @@ export class AppComponent implements AfterViewInit {
   reactionTime: number | string | null = null;
   startTime: number | null = null;
   rankings: GameRecord[] = [];
+  timeoutId: any = null;
 
   ngAfterViewInit() {
     this.loadRankings();
@@ -65,10 +67,12 @@ export class AppComponent implements AfterViewInit {
     this.vibrate(100);
     
     const delay = Math.random() * 4000 + 1000;
-    setTimeout(() => {
-      this.gameState = GameStates.READY;
-      this.startTime = Date.now();
-      this.vibrate(200);
+    this.timeoutId = setTimeout(() => {
+      if (this.gameState === GameStates.WAITING) {  // まだ待機状態の場合のみ
+        this.gameState = GameStates.READY;
+        this.startTime = Date.now();
+        this.vibrate(200);
+      }
     }, delay);
   }
 
@@ -93,13 +97,21 @@ export class AppComponent implements AfterViewInit {
       this.rankings = newRankings;
       localStorage.setItem('reactionGameRankings', JSON.stringify(newRankings));
     } else if (this.gameState === GameStates.WAITING) {
-      this.gameState = GameStates.IDLE;
-      this.reactionTime = 'フライング！';
+      // フライング処理
+      if (this.timeoutId) {
+        clearTimeout(this.timeoutId);
+        this.timeoutId = null;
+      }
+      this.gameState = GameStates.FLYING;
       this.vibrate([300, 100, 300]);
     }
   }
 
   resetGame() {
+    if (this.timeoutId) {
+      clearTimeout(this.timeoutId);
+      this.timeoutId = null;
+    }
     this.gameState = GameStates.IDLE;
     this.reactionTime = null;
     this.startTime = null;
